@@ -131,9 +131,9 @@ class _MyAppState extends State<MyApp> {
     </actions>
 </toast>
 ''';
-
+    
     NotificationMessage message =
-        NotificationMessage.fromCustomTemplate("test1", group: "jj");
+        NotificationMessage.fromCustomTemplate("test1", group: "jj", datet: _winNotifyPlugin.timetFromDateTime(DateTime.now().add(const Duration(seconds: 10))));
     _winNotifyPlugin.showNotificationCustomTemplate(message, template);
   }
 
