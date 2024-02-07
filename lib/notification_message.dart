@@ -29,6 +29,9 @@ class NotificationMessage {
   /// Thumbnail next to notification text
   final String? image;
 
+  /// Time for scheduling
+  final int? datet;
+
   /// Large image at the bottom of the notification text
   final String? largeImage;
   final Map<String, dynamic> payload;
@@ -52,6 +55,9 @@ class NotificationMessage {
     /// A string that is passed to the application when it is activated by the toast. The format and contents of this string are defined by the app for its own use. When the user taps or clicks the toast to launch its associated app, the launch string provides the context to the app that allows it to show the user a view relevant to the toast content, rather than launching in its default way.
     this.launch,
 
+    /// Time for scheduling
+    this.datet,
+
     /// Large image at the bottom of the notification text
     this.largeImage,
 
@@ -68,6 +74,9 @@ class NotificationMessage {
     /// Gets or sets the unique identifier of this notification within the notification Group.
     this.id, {
     this.payload = const {},
+
+    /// Time for scheduling
+    this.datet,
 
     /// A string that is passed to the application when it is activated by the toast. The format and contents of this string are defined by the app for its own use. When the user taps or clicks the toast to launch its associated app, the launch string provides the context to the app that allows it to show the user a view relevant to the toast content, rather than launching in its default way.
     this.launch,
@@ -95,6 +104,7 @@ class NotificationMessage {
       "tag": id,
       "payload": payload,
       "group": group,
+      "datet": datet,
       "launch": launch,
       "temolateType": temolateType.name,
       "largImage": largeImage
@@ -112,6 +122,7 @@ class NotificationMessage {
         body = json["body"],
         image = json["image"],
         payload = Map.from(json["payload"]),
+        datet = json['datet'],
         group = json["group"],
         largeImage = json["largImage"],
         launch = json["launch"],
@@ -131,6 +142,9 @@ class NotificationMessage {
     }
     if (launch != null) {
       messageJs["launch"] = launch;
+    }
+    if (datet != null) {
+      messageJs["datet"] = datet;
     }
     if (group != null) {
       messageJs["group"] = group;

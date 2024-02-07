@@ -3,6 +3,11 @@
 namespace windows_notification
 {
 
+  void ScheduledToastNotificationShowingHandler(ToastNotifier const& sender, ScheduledToastNotificationShowingEventArgs const& e)
+  {
+    std::cout << "viewed" << std::endl;
+  }
+
   // static
   void WindowsNotificationPlugin::RegisterWithRegistrar(
       flutter::PluginRegistrarWindows *registrar)
@@ -82,6 +87,46 @@ namespace windows_notification
         }
         result->Success(nullptr);
       }
+      // else if (method_call.method_name().compare("custom_template") == 0)
+      // {
+      //   auto args = std::get<flutter::EncodableMap>(*method_call.arguments());
+      //   std::string const tag = std::get<std::string>(args[flutter::EncodableValue("tag")]);
+      //   std::string const payload = std::get<std::string>(args[flutter::EncodableValue("payload")]);
+      //   std::string const temp = std::get<std::string>(args[flutter::EncodableValue("template")]);
+      //   XmlDocument doc = showCustomTemplate(temp);
+      //   doc.DocumentElement().SetAttribute(L"payload", winrt::to_hstring(payload));
+      //   auto value = isNull(args, "launch");
+      //   if (value)
+      //   {
+      //     std::string const launchData = std::get<std::string>(args[flutter::EncodableValue("launch")]);
+      //     doc.DocumentElement().SetAttribute(L"launch", winrt::to_hstring(launchData));
+      //   }
+      //   ToastNotification notif{doc};
+
+      //   notif.Tag(winrt::to_hstring(tag));
+      //   auto groupExist = isNull(args, "group");
+      //   if (groupExist)
+      //   {
+      //     std::string const group = std::get<std::string>(args[flutter::EncodableValue("group")]);
+      //     notif.Group(winrt::to_hstring(group));
+      //   }
+      //   auto withAppId = isNull(args, "application_id");
+      //   if (withAppId)
+      //   {
+      //     std::string const appId = std::get<std::string>(args[flutter::EncodableValue("application_id")]);
+      //     ToastNotifier toastNotifier_{toastManager.CreateToastNotifier(winrt::to_hstring(appId))};
+      //     toastNotifier_.Show(notif);
+      //   }
+      //   else
+      //   {
+      //     ToastNotifier toastNotifier_{toastManager.CreateToastNotifier()};
+      //     toastNotifier_.Show(notif);
+      //   }
+      //   notif.Activated({this, &WindowsNotificationPlugin::onActivate});
+      //   notif.Dismissed({this, &WindowsNotificationPlugin::onDismissed});
+      //   // test(t);
+      //   result->Success(nullptr);
+      // }
       else if (method_call.method_name().compare("custom_template") == 0)
       {
         auto args = std::get<flutter::EncodableMap>(*method_call.arguments());
@@ -96,29 +141,65 @@ namespace windows_notification
           std::string const launchData = std::get<std::string>(args[flutter::EncodableValue("launch")]);
           doc.DocumentElement().SetAttribute(L"launch", winrt::to_hstring(launchData));
         }
-        ToastNotification notif{doc};
 
-        notif.Tag(winrt::to_hstring(tag));
-        auto groupExist = isNull(args, "group");
-        if (groupExist)
-        {
-          std::string const group = std::get<std::string>(args[flutter::EncodableValue("group")]);
-          notif.Group(winrt::to_hstring(group));
-        }
-        auto withAppId = isNull(args, "application_id");
-        if (withAppId)
-        {
-          std::string const appId = std::get<std::string>(args[flutter::EncodableValue("application_id")]);
-          ToastNotifier toastNotifier_{toastManager.CreateToastNotifier(winrt::to_hstring(appId))};
-          toastNotifier_.Show(notif);
-        }
+        auto withdatet = isNull(args, "datet");
+        if (withdatet) {
+          std::int32_t const datet = std::get<std::int32_t>(args[flutter::EncodableValue("datet")]);
+          
+          DateTime dt = clock::from_time_t(datet);
+          ScheduledToastNotification notif{doc, dt};
+
+          notif.Tag(winrt::to_hstring(tag));
+          auto groupExist = isNull(args, "group");
+          if (groupExist)
+          {
+            std::string const group = std::get<std::string>(args[flutter::EncodableValue("group")]);
+            notif.Group(winrt::to_hstring(group));
+          }
+          auto withAppId = isNull(args, "application_id");
+          if (withAppId)
+          {
+            std::string const appId = std::get<std::string>(args[flutter::EncodableValue("application_id")]);
+            ToastNotifier toastNotifier_{toastManager.CreateToastNotifier(winrt::to_hstring(appId))};
+            toastNotifier_.ScheduledToastNotificationShowing({ get_abi(&ScheduledToastNotificationShowingHandler) });
+            toastNotifier_.AddToSchedule(notif);
+          }
+          else
+          {
+            ToastNotifier toastNotifier_{toastManager.CreateToastNotifier()};
+            toastNotifier_.ScheduledToastNotificationShowing({ get_abi(&ScheduledToastNotificationShowingHandler) });
+            toastNotifier_.AddToSchedule(notif);
+          }
+          
+        } 
         else
         {
-          ToastNotifier toastNotifier_{toastManager.CreateToastNotifier()};
-          toastNotifier_.Show(notif);
+          ToastNotification notif{doc};
+
+          notif.Tag(winrt::to_hstring(tag));
+          auto groupExist = isNull(args, "group");
+          if (groupExist)
+          {
+            std::string const group = std::get<std::string>(args[flutter::EncodableValue("group")]);
+            notif.Group(winrt::to_hstring(group));
+          }
+          auto withAppId = isNull(args, "application_id");
+          if (withAppId)
+          {
+            std::string const appId = std::get<std::string>(args[flutter::EncodableValue("application_id")]);
+            ToastNotifier toastNotifier_{toastManager.CreateToastNotifier(winrt::to_hstring(appId))};
+            toastNotifier_.Show(notif);
+          }
+          else
+          {
+            ToastNotifier toastNotifier_{toastManager.CreateToastNotifier()};
+            toastNotifier_.Show(notif);
+          }
+          notif.Activated({this, &WindowsNotificationPlugin::onActivate});
+          notif.Dismissed({this, &WindowsNotificationPlugin::onDismissed});
+          
         }
-        notif.Activated({this, &WindowsNotificationPlugin::onActivate});
-        notif.Dismissed({this, &WindowsNotificationPlugin::onDismissed});
+
         // test(t);
         result->Success(nullptr);
       }

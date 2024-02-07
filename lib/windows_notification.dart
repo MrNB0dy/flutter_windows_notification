@@ -56,4 +56,8 @@ class WindowsNotification {
     return WindowsNotificationPlatform.instance
         .removeNotificationGroup(group, applicationId);
   }
+
+  int timetFromDateTime(DateTime date) {
+    return ((date.millisecondsSinceEpoch ~/ 1000) + 5);
+  }
 }
