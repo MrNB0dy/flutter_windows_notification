@@ -31,6 +31,10 @@ abstract class WindowsNotificationPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<void> removeSchedule(final String? tag, final String? applicationId) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
   Future<void> showNotificationCustomTemplate(
       final NotificationMessage notification,
       final String? applicationId,

@@ -42,6 +42,18 @@ class MethodChannelWindowsNotification extends WindowsNotificationPlatform {
   final methodChannel = const MethodChannel('windows_notification');
 
   @override
+  Future<void> removeSchedule(final String? tag,
+      final String? applicationId) async {
+        Map data = {};
+        if (applicationId != null) data["application_id"] = applicationId;
+
+        if (tag != null) data["tag"] = tag;
+
+        
+        await methodChannel.invokeMethod('remove_schedule', data);
+  }
+
+  @override
   Future<void> showNotification(final NotificationMessage notification,
       final String? applicationId) async {
     final data = notification.toJson;

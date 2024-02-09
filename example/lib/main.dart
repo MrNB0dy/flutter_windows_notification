@@ -133,7 +133,7 @@ class _MyAppState extends State<MyApp> {
 ''';
     
     NotificationMessage message =
-        NotificationMessage.fromCustomTemplate("test1", group: "jj", datet: _winNotifyPlugin.timetFromDateTime(DateTime.now().add(const Duration(seconds: 10))));
+        NotificationMessage.fromCustomTemplate("test1", group: "jj", datet: _winNotifyPlugin.timetFromDateTime(DateTime.now().add(const Duration(seconds: 30))));
     _winNotifyPlugin.showNotificationCustomTemplate(message, template);
   }
 
@@ -155,6 +155,15 @@ class _MyAppState extends State<MyApp> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              _winNotifyPlugin.removeSchedule(null);
+                            },
+                            child: const Text(
+                                "Remove all scheduled notifications")),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         ElevatedButton(
                             onPressed: () {
                               sendMyOwnTemplate();

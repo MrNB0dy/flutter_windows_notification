@@ -245,6 +245,50 @@ namespace windows_notification
         // test(t);
         result->Success(nullptr);
       }
+      else if (method_call.method_name().compare("remove_schedule") == 0)
+      {
+        auto args = std::get<flutter::EncodableMap>(*method_call.arguments());
+        
+        auto withTag = isNull(args, "tag");
+
+        auto withAppId = isNull(args, "application_id");
+        if (withAppId)
+        {
+          std::string const appId = std::get<std::string>(args[flutter::EncodableValue("application_id")]);
+          ToastNotifier toastNotifier_{toastManager.CreateToastNotifier(winrt::to_hstring(appId))};
+          auto scheduledToasts = toastNotifier_.GetScheduledToastNotifications();
+          for (const auto& toast : scheduledToasts)
+          {
+              if(withTag) {
+                std::string const tag = std::get<std::string>(args[flutter::EncodableValue("tag")]);
+                if(toast.Tag() == winrt::to_hstring(tag)) {
+                  toastNotifier_.RemoveFromSchedule(toast);
+                  break;
+                }
+              } else {
+                toastNotifier_.RemoveFromSchedule(toast);
+              }
+          }
+        }
+        else
+        {
+          ToastNotifier toastNotifier_{toastManager.CreateToastNotifier()};
+          auto scheduledToasts = toastNotifier_.GetScheduledToastNotifications();
+          for (const auto& toast : scheduledToasts)
+          {
+              if(withTag) {
+                std::string const tag = std::get<std::string>(args[flutter::EncodableValue("tag")]);
+                if(toast.Tag() == winrt::to_hstring(tag)) {
+                  toastNotifier_.RemoveFromSchedule(toast);
+                  break;
+                }
+              } else {
+                toastNotifier_.RemoveFromSchedule(toast);
+              }
+          }
+        }
+        result->Success(nullptr);
+      }
       else if (method_call.method_name().compare("clear_history") == 0)
       {
         auto args = std::get<flutter::EncodableMap>(*method_call.arguments());

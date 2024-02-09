@@ -20,6 +20,13 @@ class WindowsNotification {
         .showNotification(templaate, applicationId);
   }
 
+  /// Remove scheduled notification (null -> cancell all)
+  Future<void> removeSchedule(
+      final String? tag) async {
+    return WindowsNotificationPlatform.instance
+        .removeSchedule(tag, applicationId);
+  }
+
   /// To send notifications with custom templates you must create NotificationMessage with fromCustomTemplate constructor
   Future<void> showNotificationCustomTemplate(
       final NotificationMessage notification, final String template) async {
