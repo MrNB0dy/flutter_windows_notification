@@ -65,6 +65,6 @@ class WindowsNotification {
   }
 
   int timetFromDateTime(DateTime date) {
-    return ((date.millisecondsSinceEpoch ~/ 1000) + 5);
+    return (date.millisecondsSinceEpoch ~/ 1000);
   }
 }
